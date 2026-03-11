@@ -1,0 +1,57 @@
+/* Container */
+.timetable-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* Grid for days */
+.timetable-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+/* Each day card */
+.timetable-day {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.timetable-day h3 {
+  font-size: 16px;
+  color: #1f2937;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 5px;
+}
+
+/* Individual class entry */
+.timetable-entry {
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+}
+
+.timetable-entry h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  color: #2563eb;
+}
+
+.timetable-entry p {
+  font-size: 12px;
+  color: #4b5563;
+  margin: 2px 0;
+}
+
+/* Responsive */
+@media(max-width:768px){
+  .timetable-grid {
+    grid-template-columns: 1fr;
+  }
+}

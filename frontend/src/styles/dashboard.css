@@ -1,0 +1,104 @@
+/* Container */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Stats Cards */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.card h3 {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+.card p {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+/* Courses Grid */
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.course-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.progress-bar {
+  height: 10px;
+  background-color: #e5e7eb;
+  border-radius: 5px;
+  margin: 10px 0;
+}
+
+.progress {
+  height: 100%;
+  background-color: #2563eb; /* professional blue */
+  border-radius: 5px;
+}
+
+/* Assignments Table */
+.assignments-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.assignments-table th,
+.assignments-table td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.assignments-table th {
+  background-color: #f3f4f6;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.assignments-table td {
+  font-size: 14px;
+  color: #1f2937;
+}
+
+.completed {
+  color: #10b981; /* green */
+  font-weight: bold;
+}
+
+.pending {
+  color: #f59e0b; /* amber */
+  font-weight: bold;
+}
+
+/* Responsive */
+@media(max-width:768px){
+  .cards, .courses-grid {
+    grid-template-columns: 1fr;
+  }
+}

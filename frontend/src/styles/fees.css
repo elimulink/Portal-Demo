@@ -1,0 +1,93 @@
+.fees-container{
+  display:flex;
+  flex-direction:column;
+  gap:25px;
+}
+
+/* Summary Cards */
+.fees-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:20px;
+}
+
+.fees-card{
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+  text-align:center;
+}
+
+.fees-card h4{
+  margin-bottom:10px;
+}
+
+.fees-card .amount{
+  font-size:24px;
+  font-weight:bold;
+}
+
+.fees-card.paid{
+  border-left:5px solid #2e8b57;
+}
+
+.fees-card.outstanding{
+  border-left:5px solid #e74c3c;
+}
+
+/* Payment History Table */
+.payment-history{
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+  overflow-x:auto;
+}
+
+.payment-history table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.payment-history th, .payment-history td{
+  padding:10px;
+  text-align:left;
+  border-bottom:1px solid #eee;
+}
+
+.payment-history td.paid{
+  color:#2e8b57;
+  font-weight:bold;
+}
+
+.payment-history td.pending{
+  color:#e74c3c;
+  font-weight:bold;
+}
+
+/* Pay Fees Button */
+.pay-fees-btn{
+  display:flex;
+  justify-content:flex-end;
+}
+
+.pay-fees-btn button{
+  padding:10px 15px;
+  background:#1f3a5f;
+  color:white;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.pay-fees-btn button:hover{
+  background:#162c49;
+}
+
+/* Mobile */
+@media(max-width:768px){
+  .fees-summary-grid{
+    grid-template-columns:1fr;
+  }
+}
