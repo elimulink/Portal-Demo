@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE } from "../api";
 import "../styles/assignments.css";
 
 function Assignments() {
   const [assignments, setAssignments] = useState([]);
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/dashboard/assignments")
+    axios.get(`${API_BASE}/dashboard/assignments`)
       .then(res => setAssignments(res.data))
       .catch(err => console.error(err));
   }, []);

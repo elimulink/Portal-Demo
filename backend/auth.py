@@ -1,26 +1,13 @@
 from datetime import datetime, timedelta
 from jose import jwt
 from passlib.context import CryptContext
+from data import get_student_by_username
 
 SECRET_KEY = "supersecretkey"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-# Demo bcrypt hashes are stored as constants so app startup never hashes
-# arbitrary values such as long secrets loaded from the environment.
-DEMO_PASSWORD_HASHES = {
-    "joshua": "$2b$12$x.RP0czJlgEwMFqML2zu9uTc3FmOUDa1KP.RBkDElkepiF3mJmP.y",
-}
-
-fake_student_db = {
-    "joshua": {
-        "username": "joshua",
-        "full_name": "Joshua Ajode",
-        "password": DEMO_PASSWORD_HASHES["joshua"],
-    }
-}
 
 def hash_password(password: str) -> str:
     password_bytes = password.encode("utf-8")
@@ -32,9 +19,12 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 def authenticate_student(username: str, password: str):
-    student = fake_student_db.get(username)
+    student = get_student_by_username(username)
 
     if not student:
+        return None
+
+    if not student.get("password"):
         return None
 
     if not verify_password(password, student["password"]):

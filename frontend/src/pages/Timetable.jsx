@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE } from "../api";
 import "../styles/timetable.css";
 
 function Timetable() {
   const [timetable, setTimetable] = useState([]);
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/timetable")
+    axios.get(`${API_BASE}/timetable`)
       .then(res => setTimetable(res.data))
       .catch(err => console.error(err));
   }, []);

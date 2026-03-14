@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE } from "../api";
 import "../styles/dashboard.css";
 
 function Dashboard() {
@@ -9,17 +10,17 @@ function Dashboard() {
 
   useEffect(() => {
     // Fetch dashboard summary
-    axios.get("http://127.0.0.1:8000/dashboard")
+    axios.get(`${API_BASE}/dashboard`)
       .then(res => setStats(res.data))
       .catch(err => console.error(err));
 
     // Fetch courses
-    axios.get("http://127.0.0.1:8000/dashboard/courses")
+    axios.get(`${API_BASE}/dashboard/courses`)
       .then(res => setCourses(res.data))
       .catch(err => console.error(err));
 
     // Fetch assignments
-    axios.get("http://127.0.0.1:8000/dashboard/assignments")
+    axios.get(`${API_BASE}/dashboard/assignments`)
       .then(res => setAssignments(res.data))
       .catch(err => console.error(err));
   }, []);
