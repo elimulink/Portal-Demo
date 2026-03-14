@@ -1,11 +1,13 @@
-from auth import pwd_context
+DEMO_PASSWORD_HASHES = {
+    "joshua": "$2b$12$x.RP0czJlgEwMFqML2zu9uTc3FmOUDa1KP.RBkDElkepiF3mJmP.y",
+    "alice": "$2b$12$I2B4Hn.ANT81jnyP0PewY.o0lgzLQIteVHNzjTUsIXv6jR8Fl/zVi",
+}
 
-# Pre-hashed passwords
 students_db = {
     "joshua": {
         "username": "joshua",
         "full_name": "Joshua Ajode",
-        "password": pwd_context.hash("1234"),
+        "password": DEMO_PASSWORD_HASHES["joshua"],
         "timetable": [
             {"day": "Monday", "subject": "Math", "time": "08:00-09:00"},
             {"day": "Monday", "subject": "English", "time": "09:00-10:00"},
@@ -25,7 +27,7 @@ students_db = {
     "alice": {
         "username": "alice",
         "full_name": "Alice Kimani",
-        "password": pwd_context.hash("abcd"),
+        "password": DEMO_PASSWORD_HASHES["alice"],
         "timetable": [
             {"day": "Tuesday", "subject": "Biology", "time": "08:00-09:00"},
             {"day": "Tuesday", "subject": "Chemistry", "time": "09:00-10:00"},

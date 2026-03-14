@@ -8,22 +8,30 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# Hash password once
-hashed_password = pwd_context.hash("1234")
+# Demo bcrypt hashes are stored as constants so app startup never hashes
+# arbitrary values such as long secrets loaded from the environment.
+DEMO_PASSWORD_HASHES = {
+    "joshua": "$2b$12$x.RP0czJlgEwMFqML2zu9uTc3FmOUDa1KP.RBkDElkepiF3mJmP.y",
+}
 
-# Test student database
 fake_student_db = {
     "joshua": {
         "username": "joshua",
         "full_name": "Joshua Ajode",
-        "password": hashed_password
+        "password": DEMO_PASSWORD_HASHES["joshua"],
     }
 }
 
-def verify_password(plain_password, hashed_password):
+def hash_password(password: str) -> str:
+    password_bytes = password.encode("utf-8")
+    if len(password_bytes) > 72:
+        raise ValueError("password cannot be longer than 72 bytes")
+    return pwd_context.hash(password)
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
-def authenticate_student(username, password):
+def authenticate_student(username: str, password: str):
     student = fake_student_db.get(username)
 
     if not student:
