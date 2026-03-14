@@ -9,6 +9,10 @@ app = FastAPI(title="Student Portal API")
 origins = [
     "http://localhost:5173",  # Vite default
     "http://localhost:3000",  # if using npm start
+    "http://127.0.0.1:5173",
+    "http://127.0.0.1:4173",
+    "https://elimulink-demo-portal.web.app",
+    "https://elimulink-demo-portal.firebaseapp.com",
 ]
 
 app.add_middleware(
