@@ -43,15 +43,11 @@ def _student_id(username: str = DEMO_USERNAME) -> Any:
 
 
 def get_student_courses(username: str = DEMO_USERNAME) -> list[dict[str, Any]]:
-    student_id = _student_id(username)
-    if student_id is None:
-        return []
-
     enrollments = (
         get_supabase()
         .table("enrollments")
-        .select("course_id, progress")
-        .eq("student_id", student_id)
+        .select("course_code")
+        .eq("student_userr", username)
         .execute()
         .data
         or []
@@ -59,47 +55,43 @@ def get_student_courses(username: str = DEMO_USERNAME) -> list[dict[str, Any]]:
     if not enrollments:
         return []
 
-    course_ids = [row["course_id"] for row in enrollments if row.get("course_id") is not None]
-    if not course_ids:
+    course_codes = [row["course_code"] for row in enrollments if row.get("course_code")]
+    if not course_codes:
         return []
 
     courses = (
         get_supabase()
         .table("courses")
-        .select("id, name, instructor")
-        .in_("id", course_ids)
+        .select("id, code, title, progress")
+        .in_("code", course_codes)
         .execute()
         .data
         or []
     )
-    courses_by_id = {course["id"]: course for course in courses}
+    courses_by_code = {course["code"]: course for course in courses if course.get("code")}
 
     results = []
     for enrollment in enrollments:
-        course = courses_by_id.get(enrollment.get("course_id"))
+        course = courses_by_code.get(enrollment.get("course_code"))
         if not course:
             continue
         results.append(
             {
                 "id": course["id"],
-                "name": course.get("name", ""),
-                "instructor": course.get("instructor", "TBA"),
-                "progress": float(enrollment.get("progress") or 0),
+                "name": course.get("title") or course.get("code", ""),
+                "instructor": course.get("code", "TBA"),
+                "progress": float(course.get("progress") or 0),
             }
         )
     return results
 
 
 def get_student_assignments(username: str = DEMO_USERNAME) -> list[dict[str, Any]]:
-    student_id = _student_id(username)
-    if student_id is None:
-        return []
-
     assignments = (
         get_supabase()
         .table("assignments")
         .select("id, title, due_date, status")
-        .eq("student_id", student_id)
+        .eq("student_userr", username)
         .execute()
         .data
         or []
@@ -116,15 +108,11 @@ def get_student_assignments(username: str = DEMO_USERNAME) -> list[dict[str, Any
 
 
 def get_student_timetable(username: str = DEMO_USERNAME) -> list[dict[str, Any]]:
-    student_id = _student_id(username)
-    if student_id is None:
-        return []
-
     timetable_rows = (
         get_supabase()
         .table("timetable")
-        .select("id, course_id, day, start_time, end_time, location")
-        .eq("student_id", student_id)
+        .select("id, day, subject, time_slot")
+        .eq("student_userr", username)
         .execute()
         .data
         or []
@@ -132,28 +120,14 @@ def get_student_timetable(username: str = DEMO_USERNAME) -> list[dict[str, Any]]
     if not timetable_rows:
         return []
 
-    course_ids = [row["course_id"] for row in timetable_rows if row.get("course_id") is not None]
-    courses_by_id = {}
-    if course_ids:
-        courses = (
-            get_supabase()
-            .table("courses")
-            .select("id, name")
-            .in_("id", course_ids)
-            .execute()
-            .data
-            or []
-        )
-        courses_by_id = {course["id"]: course for course in courses}
-
     return [
         {
             "id": row["id"],
-            "course_name": courses_by_id.get(row.get("course_id"), {}).get("name", "Unknown Course"),
+            "course_name": row.get("subject", ""),
             "day": row.get("day", ""),
-            "start_time": row.get("start_time", ""),
-            "end_time": row.get("end_time", ""),
-            "location": row.get("location", ""),
+            "start_time": row.get("time_slot", ""),
+            "end_time": "",
+            "location": "",
         }
         for row in timetable_rows
     ]
