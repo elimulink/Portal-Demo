@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from jose import jwt
 from passlib.context import CryptContext
+from passlib.exc import UnknownHashError
 from data import get_student_by_username
 
 SECRET_KEY = "supersecretkey"
@@ -16,7 +17,12 @@ def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    if not hashed_password or not isinstance(hashed_password, str):
+        return False
+    try:
+        return pwd_context.verify(plain_password, hashed_password)
+    except (ValueError, TypeError, UnknownHashError):
+        return False
 
 def authenticate_student(username: str, password: str):
     student = get_student_by_username(username)
