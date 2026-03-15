@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_BASE } from "../api";
+import { demoCourses } from "../demoData";
 import "../styles/courses.css";
 
 function Courses() {
@@ -8,8 +9,11 @@ function Courses() {
 
   useEffect(() => {
     axios.get(`${API_BASE}/dashboard/courses`)
-      .then(res => setCourses(res.data))
-      .catch(err => console.error(err));
+      .then(res => setCourses(res.data?.length ? res.data : demoCourses))
+      .catch(err => {
+        console.error(err);
+        setCourses(demoCourses);
+      });
   }, []);
 
   return (

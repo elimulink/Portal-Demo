@@ -1,17 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_BASE } from "../api";
+import { demoAssignments, demoCourses, demoStats } from "../demoData";
 import "../styles/dashboard.css";
 
-const EMPTY_STATS = {
-  total_courses: 0,
-  completed_assignments: 0,
-  pending_assignments: 0,
-  fees_paid: 0,
-  fees_due: 0,
-  upcoming_classes: 0,
-  unread_notifications: 0,
-};
+const EMPTY_STATS = demoStats;
 
 function Dashboard() {
   const [stats, setStats] = useState(EMPTY_STATS);
@@ -26,21 +19,28 @@ function Dashboard() {
       axios.get(`${API_BASE}/dashboard/assignments`),
     ]).then(([statsResult, coursesResult, assignmentsResult]) => {
       if (statsResult.status === "fulfilled") {
-        setStats({ ...EMPTY_STATS, ...statsResult.value.data });
+        const apiStats = statsResult.value.data || {};
+        const hasValues = Object.values(apiStats).some(value => value !== 0 && value !== null && value !== "");
+        setStats(hasValues ? { ...EMPTY_STATS, ...apiStats } : EMPTY_STATS);
       } else {
         console.error(statsResult.reason);
+        setStats(EMPTY_STATS);
       }
 
       if (coursesResult.status === "fulfilled") {
-        setCourses(coursesResult.value.data);
+        const apiCourses = coursesResult.value.data || [];
+        setCourses(apiCourses.length ? apiCourses : demoCourses);
       } else {
         console.error(coursesResult.reason);
+        setCourses(demoCourses);
       }
 
       if (assignmentsResult.status === "fulfilled") {
-        setAssignments(assignmentsResult.value.data);
+        const apiAssignments = assignmentsResult.value.data || [];
+        setAssignments(apiAssignments.length ? apiAssignments : demoAssignments);
       } else {
         console.error(assignmentsResult.reason);
+        setAssignments(demoAssignments);
       }
 
       setLoading(false);

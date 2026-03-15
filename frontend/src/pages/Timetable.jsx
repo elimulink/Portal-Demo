@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_BASE } from "../api";
+import { demoTimetable } from "../demoData";
 import "../styles/timetable.css";
 
 function Timetable() {
@@ -8,8 +9,11 @@ function Timetable() {
 
   useEffect(() => {
     axios.get(`${API_BASE}/timetable`)
-      .then(res => setTimetable(res.data))
-      .catch(err => console.error(err));
+      .then(res => setTimetable(res.data?.length ? res.data : demoTimetable))
+      .catch(err => {
+        console.error(err);
+        setTimetable(demoTimetable);
+      });
   }, []);
 
   // Group entries by day
