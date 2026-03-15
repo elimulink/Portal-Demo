@@ -3,29 +3,51 @@ import axios from "axios";
 import { API_BASE } from "../api";
 import "../styles/dashboard.css";
 
+const EMPTY_STATS = {
+  total_courses: 0,
+  completed_assignments: 0,
+  pending_assignments: 0,
+  fees_paid: 0,
+  fees_due: 0,
+  upcoming_classes: 0,
+  unread_notifications: 0,
+};
+
 function Dashboard() {
-  const [stats, setStats] = useState(null);
+  const [stats, setStats] = useState(EMPTY_STATS);
   const [courses, setCourses] = useState([]);
   const [assignments, setAssignments] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch dashboard summary
-    axios.get(`${API_BASE}/dashboard`)
-      .then(res => setStats(res.data))
-      .catch(err => console.error(err));
+    Promise.allSettled([
+      axios.get(`${API_BASE}/dashboard`),
+      axios.get(`${API_BASE}/dashboard/courses`),
+      axios.get(`${API_BASE}/dashboard/assignments`),
+    ]).then(([statsResult, coursesResult, assignmentsResult]) => {
+      if (statsResult.status === "fulfilled") {
+        setStats({ ...EMPTY_STATS, ...statsResult.value.data });
+      } else {
+        console.error(statsResult.reason);
+      }
 
-    // Fetch courses
-    axios.get(`${API_BASE}/dashboard/courses`)
-      .then(res => setCourses(res.data))
-      .catch(err => console.error(err));
+      if (coursesResult.status === "fulfilled") {
+        setCourses(coursesResult.value.data);
+      } else {
+        console.error(coursesResult.reason);
+      }
 
-    // Fetch assignments
-    axios.get(`${API_BASE}/dashboard/assignments`)
-      .then(res => setAssignments(res.data))
-      .catch(err => console.error(err));
+      if (assignmentsResult.status === "fulfilled") {
+        setAssignments(assignmentsResult.value.data);
+      } else {
+        console.error(assignmentsResult.reason);
+      }
+
+      setLoading(false);
+    });
   }, []);
 
-  if (!stats) return <div>Loading dashboard...</div>;
+  if (loading) return <div>Loading dashboard...</div>;
 
   return (
     <div className="dashboard-container">
