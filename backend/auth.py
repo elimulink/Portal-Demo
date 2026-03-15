@@ -1,4 +1,3 @@
-import os
 from datetime import datetime, timedelta
 from jose import jwt
 from passlib.context import CryptContext
@@ -8,8 +7,6 @@ from data import get_student_by_username
 SECRET_KEY = "supersecretkey"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
-DEMO_USERNAME = os.getenv("DEMO_USERNAME", "joshua")
-DEMO_PASSWORD = os.getenv("DEMO_PASSWORD", "1234")
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -36,12 +33,6 @@ def authenticate_student(username: str, password: str):
     stored_password = student.get("password")
     if not stored_password:
         return None
-
-    if username == DEMO_USERNAME and password == DEMO_PASSWORD:
-        return student
-
-    if password == stored_password:
-        return student
 
     if not verify_password(password, stored_password):
         return None
